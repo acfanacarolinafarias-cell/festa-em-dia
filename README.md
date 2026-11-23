@@ -1,56 +1,58 @@
-# Welcome to your Expo app 👋
+# Festa em Dia
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+App de celular (iOS e Android) para organizar eventos: a pessoa escolhe o tipo de evento e recebe um checklist com prazos calculados a partir da data. Feito com [Expo](https://expo.dev) (React Native) e TypeScript.
 
-## Get started
+## O que o app faz
 
-1. Install dependencies
+- **17 tipos de evento** com checklist pronto: casamento, aniversário de 1 ano, 15 anos, batizado, chá de bebê, chá revelação, aniversário infantil e adulto, noivado, chá de panela, despedida de solteiro(a), bodas, formatura, primeira comunhão, confraternização de empresa, chá de casa nova e evento personalizado.
+- **Checklist com prazos reais**, por etapa (12 meses antes … depois do evento). Se faltar menos tempo do que o modelo pede, o cronograma é comprimido.
+- **Checklist editável** em cada evento, e **modelos padrão editáveis** (aba Modelos), com opção de restaurar o original e criar modelos próprios.
+- **Convidados**: convites por família ou casal (adultos e crianças), resposta (aguardando, confirmado, não vai), mesas, mensagem de convite pronta para o WhatsApp e importação de vários convites colando uma lista.
+- **Fornecedores**: orçamentos por categoria, etiqueta de menor preço, contrato e parcelas.
+- **Orçamento**: total comprometido, já pago, próximos pagamentos e avisos de atraso.
+- **Calculadora** de salgados, doces, bolo, bebidas e churrasco.
 
-   ```bash
-   npm install
-   ```
+Os dados ficam salvos no próprio aparelho (AsyncStorage). Ainda não há login nem sincronização entre aparelhos.
 
-2. Start the app
+## Como rodar
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+Pré-requisito: Node.js 20 ou mais recente.
 
 ```bash
-npm run reset-project
+npm install
+npx expo start
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+Depois, leia o QR code com o app **Expo Go** no celular (Android ou iPhone) ou aperte `a` / `i` para abrir em um emulador.
 
-### Other setup steps
+> O seletor de data usa `@react-native-community/datetimepicker`, que já vem no Expo Go. Na versão web a data é digitada como DD/MM/AAAA.
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## Verificações
 
-## Learn more
+```bash
+npx tsc --noEmit   # tipos
+npx expo lint      # lint
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+## Estrutura
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```
+src/
+  app/                rotas (Expo Router): cada arquivo é uma tela
+    (tabs)/           abas "Meus eventos" e "Modelos"
+    novo.tsx          criar evento (tipo + dados)
+    evento/[id]/      evento e telas de edição (tarefa, convidado, fornecedor, …)
+  features/           abas do evento: checklist, convidados, fornecedores, orçamento, calculadora
+  domain/             regras do app, sem dependência de tela: tipos, modelos de checklist, datas, cálculos
+  store/              estado global e gravação no aparelho
+  ui/                 componentes visuais e tema (claro e escuro)
+```
 
-## Join the community
+Os checklists padrão ficam em `src/domain/templates.ts`, num formato fácil de editar: uma linha com a etapa (`m12`, `m6`, `s1`, `d0`, `pos`…) seguida das tarefas, cada uma com o código da categoria na frente.
 
-Join our community of developers creating universal apps.
+## Próximos passos sugeridos
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+1. Login e sincronização na nuvem (ex.: Supabase ou Firebase), para usar em mais de um celular e dividir a organização com outras pessoas.
+2. Página do evento para o convidado confirmar presença sozinho (RSVP por link).
+3. Lembretes por notificação (`expo-notifications`) para tarefas e parcelas que estão vencendo.
+4. Publicação nas lojas com EAS Build: antes, definir `ios.bundleIdentifier` e `android.package` em `app.json`.
