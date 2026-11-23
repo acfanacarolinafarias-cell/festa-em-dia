@@ -14,7 +14,21 @@ App de celular (iOS e Android) para organizar eventos: a pessoa escolhe o tipo d
 
 Os dados ficam salvos no próprio aparelho (AsyncStorage). Ainda não há login nem sincronização entre aparelhos.
 
-## Como rodar
+## Ver no celular sem instalar nada no computador
+
+A versão web do app fica publicada no GitHub Pages:
+**https://acfanacarolinafarias-cell.github.io/festa-em-dia/**
+
+Abra o link no navegador do celular. Para ter um ícone na tela inicial: no iPhone, Safari → Compartilhar → "Adicionar à Tela de Início"; no Android, Chrome → menu ⋮ → "Adicionar à tela inicial". Os dados ficam salvos no navegador do próprio celular.
+
+Para atualizar o site, gere a versão web e publique a pasta `dist` no branch `gh-pages`:
+
+```bash
+npx expo export --platform web --output-dir dist
+cp dist/index.html dist/404.html && touch dist/.nojekyll
+```
+
+## Como rodar (com um computador)
 
 Pré-requisito: Node.js 20 ou mais recente.
 

@@ -24,7 +24,13 @@ export function AppStoreProvider({ children, fallback }: { children: ReactNode; 
   useEffect(() => {
     let alive = true;
     AsyncStorage.getItem(STORAGE_KEY)
-      .then((raw) => (raw ? normalizeState(JSON.parse(raw)) : exampleState()))
+      .then((raw) => {
+        if (raw) return normalizeState(JSON.parse(raw));
+        // Primeira abertura: grava o exemplo já, para os links dele continuarem valendo.
+        const first = exampleState();
+        AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(first)).catch(() => {});
+        return first;
+      })
       .catch(() => exampleState())
       .then((s) => alive && setState(s));
     return () => {
